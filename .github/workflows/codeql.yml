@@ -77,9 +77,9 @@ jobs:
             libgeos-dev \
             libgeotiff-dev \
             libgif-dev \
-            libhdf5-serial-dev \
+            \ # libhdf5-serial-dev \
             libjpeg-dev \
-            libkml-dev \
+            \ # libkml-dev \
             liblcms2-2 \
             liblz4-dev \
             liblzma-dev \
