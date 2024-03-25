@@ -133,7 +133,7 @@ jobs:
       run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUSE_CCACHE=YES -DGDAL_USE_LERC_INTERNAL=OFF
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUSE_CCACHE=YES -DGDAL_USE_LERC_INTERNAL=OFF -DGDAL_ENABLE_HDF5_GLOBAL_LOCK=ON
           make -j$(nproc)
 
     - name: Summarize ccache
