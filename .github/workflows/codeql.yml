@@ -96,7 +96,7 @@ jobs:
     - uses: rui314/setup-mold@6bebc01caac32fb5251ee64f60cea0322d0e6574 # v1
       if: ${{ matrix.language == 'c-cpp' }}
       with:
-        make-default: false
+        make-default: true
     - run: cmake --version
     - run: mold --version
     - name: Configure
