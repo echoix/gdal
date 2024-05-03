@@ -97,7 +97,7 @@ jobs:
       if: ${{ matrix.language == 'c-cpp' }}
       with:
         make-default: false
-
+    - run: cmake --version
     - name: Configure
       if: matrix.language == 'c-cpp'
       run: |
