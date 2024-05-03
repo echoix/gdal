@@ -49,7 +49,8 @@ jobs:
     - name: Install dependencies
       run: |
           sudo apt-get update
-          sudo apt-get install -y ccache cmake g++ swig python3-numpy libproj-dev libqhull-dev
+          sudo apt-get install -y g++ swig python3-numpy libproj-dev libqhull-dev
+          # sudo apt-get install -y ccache cmake g++ swig python3-numpy libproj-dev libqhull-dev
           sudo apt-get install -y \
             libblosc-dev \
             libboost-dev \
@@ -91,12 +92,17 @@ jobs:
             libzstd-dev \
             unixodbc-dev
 
-    - run: python -m pip install ninja
+    - run: python -m pip install ninja cmake
+    - uses: rui314/setup-mold@6bebc01caac32fb5251ee64f60cea0322d0e6574 # v1
+      if: ${{ matrix.language == 'c-cpp' }}
+      with:
+        make-default: false
+
     - name: Configure
       if: matrix.language == 'c-cpp'
       run: |
           mkdir build
-          (cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGDAL_USE_LERC_INTERNAL=OFF -G Ninja)
+          (cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGDAL_USE_LERC_INTERNAL=OFF -G Ninja -DCMAKE_LINKER_TYPE=MOLD)
 
     # Initializes the CodeQL tools for scanning.
     # We do that after running CMake to avoid CodeQL to trigger during CMake time,
