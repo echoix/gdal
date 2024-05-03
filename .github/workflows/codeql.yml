@@ -98,6 +98,7 @@ jobs:
       with:
         make-default: false
     - run: cmake --version
+    - run: mold --version
     - name: Configure
       if: matrix.language == 'c-cpp'
       run: |
