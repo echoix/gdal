@@ -103,7 +103,7 @@ jobs:
       if: matrix.language == 'c-cpp'
       run: |
           mkdir build
-          (cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGDAL_USE_LERC_INTERNAL=OFF -G Ninja -DCMAKE_LINKER_TYPE=MOLD)
+          (cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGDAL_USE_LERC_INTERNAL=OFF -G Ninja -DCMAKE_LINKER_TYPE=mold)
 
     # Initializes the CodeQL tools for scanning.
     # We do that after running CMake to avoid CodeQL to trigger during CMake time,
