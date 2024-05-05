@@ -49,7 +49,7 @@ jobs:
         comment_on_pr: false
     - name: Checkout repository
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
-
+    - run: command -v cmake
     - name: Install dependencies
       run: |
           sudo apt-get update
@@ -102,6 +102,7 @@ jobs:
     #   if: ${{ matrix.language == 'c-cpp' }}
     #   with:
     #     make-default: true
+    - run: command -v cmake
     - run: cmake --version
     # - run: mold --version
     - name: Configure
