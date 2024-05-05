@@ -92,13 +92,13 @@ jobs:
             libzstd-dev \
             unixodbc-dev
 
-    - run: python -m pip install ninja cmake
-    - uses: rui314/setup-mold@6bebc01caac32fb5251ee64f60cea0322d0e6574 # v1
-      if: ${{ matrix.language == 'c-cpp' }}
-      with:
-        make-default: true
+    # - run: python -m pip install ninja cmake
+    # - uses: rui314/setup-mold@6bebc01caac32fb5251ee64f60cea0322d0e6574 # v1
+    #   if: ${{ matrix.language == 'c-cpp' }}
+    #   with:
+    #     make-default: true
     - run: cmake --version
-    - run: mold --version
+    # - run: mold --version
     - name: Configure
       if: matrix.language == 'c-cpp'
       run: |
@@ -108,9 +108,17 @@ jobs:
             -DGDAL_USE_LERC_INTERNAL=OFF \
             -DBUILD_TESTING=OFF \
             -G Ninja \
-            -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=mold" \
-            -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=mold" \
           )
+      # run: |
+      #     mkdir build
+      #     (cd build && cmake .. \
+      #       -DCMAKE_BUILD_TYPE=Debug \
+      #       -DGDAL_USE_LERC_INTERNAL=OFF \
+      #       -DBUILD_TESTING=OFF \
+      #       -G Ninja \
+      #       -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=mold" \
+      #       -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=mold" \
+      #     )
 
     # Initializes the CodeQL tools for scanning.
     # We do that after running CMake to avoid CodeQL to trigger during CMake time,
