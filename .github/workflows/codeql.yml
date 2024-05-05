@@ -156,7 +156,7 @@ jobs:
     - name: Build
       if: matrix.language == 'c-cpp'
       run: |
-          cmake --build $GITHUB_WORKSPACE/build -j$( ($(nproc)+3) )
+          cmake --build $GITHUB_WORKSPACE/build -j$( ($(nproc)+1) )
         # cmake --build $GITHUB_WORKSPACE/build -j$( ($(nproc)+3) )
         # cmake --build $GITHUB_WORKSPACE/build -j --verbose
 
