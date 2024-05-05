@@ -53,7 +53,7 @@ jobs:
     - name: Install dependencies
       run: |
           sudo apt-get update
-          sudo apt-get install -y gcc g++ swig python3-numpy libproj-dev libqhull-dev
+          sudo apt-get install -y gcc cmake g++ swig python3-numpy libproj-dev libqhull-dev
           # sudo apt-get install -y ccache cmake g++ swig python3-numpy libproj-dev libqhull-dev
           sudo apt-get install -y \
             libblosc-dev \
@@ -96,7 +96,7 @@ jobs:
             libzstd-dev \
             unixodbc-dev
 
-    - run: python -m pip install cmake
+    # - run: python -m pip install cmake
     # - run: python -m pip install ninja cmake
     # - uses: rui314/setup-mold@6bebc01caac32fb5251ee64f60cea0322d0e6574 # v1
     #   if: ${{ matrix.language == 'c-cpp' }}
