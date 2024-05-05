@@ -91,13 +91,17 @@ jobs:
             libzstd-dev \
             unixodbc-dev
 
+    - name: Install latest ninja
+      run: pip install ninja
+
     - name: Configure
       if: matrix.language == 'c-cpp'
       run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DGDAL_USE_LERC_INTERNAL=OFF \
-            -DBUILD_TESTING=OFF
+            -DBUILD_TESTING=OFF \
+            -G Ninja \
 
     # Initializes the CodeQL tools for scanning.
     # We do that after running CMake to avoid CodeQL to trigger during CMake time,
@@ -120,7 +124,7 @@ jobs:
     - name: Build
       if: matrix.language == 'c-cpp'
       run: |
-          (cd build && make -j$(nproc))
+        cmake --build build -j$(nproc)
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@d39d31e687223d841ef683f52467bd88e9b21c14 # v3.25.3
