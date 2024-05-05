@@ -106,6 +106,7 @@ jobs:
           (cd build && cmake .. \
             -DCMAKE_BUILD_TYPE=Debug \
             -DGDAL_USE_LERC_INTERNAL=OFF \
+            -DBUILD_TESTING=OFF \
             -G Ninja \
             -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=mold" \
             -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=mold" \
