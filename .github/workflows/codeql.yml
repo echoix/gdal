@@ -149,7 +149,7 @@ jobs:
     - name: Build
       if: matrix.language == 'c-cpp'
       run: |
-          cmake --build $GITHUB_WORKSPACE/build -j
+          cmake --build $GITHUB_WORKSPACE/build -j --verbose
         # cmake --build $GITHUB_WORKSPACE/build -j$(nproc)
 
     - name: Perform CodeQL Analysis
