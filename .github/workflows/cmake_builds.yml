@@ -96,7 +96,13 @@ jobs:
         #
         python3 -m pip install -U pip wheel setuptools numpy
         python3 -m pip install -r $GITHUB_WORKSPACE/autotest/requirements.txt
-
+    - name: Configure ccache
+      run: |
+          echo CCACHE_BASEDIR=$PWD >> ${GITHUB_ENV}
+          echo CCACHE_DIR=$PWD/.ccache >> ${GITHUB_ENV}
+          echo CCACHE_MAXSIZE=250M >> ${GITHUB_ENV}
+          ccache -z
+      working-directory: ${{ github.workspace }}
     - name: Build libjxl
       run: |
         # Build libjxl
@@ -150,13 +156,6 @@ jobs:
           && sudo rm -rf install-ubuntu2004-rev6309.tar.gz install \
           && sudo apt-get update -y \
           && sudo apt-get install -y --fix-missing --no-install-recommends liblcms2-dev
-    - name: Configure ccache
-      run: |
-          echo CCACHE_BASEDIR=$PWD >> ${GITHUB_ENV}
-          echo CCACHE_DIR=$PWD/.ccache >> ${GITHUB_ENV}
-          echo CCACHE_MAXSIZE=250M >> ${GITHUB_ENV}
-          ccache -z
-      working-directory: ${{ github.workspace }}
     - name: Configure
       run: |
         export PATH=$CMAKE_DIR:/usr/local/bin:/usr/bin:/bin # Avoid CMake config from brew etc.
