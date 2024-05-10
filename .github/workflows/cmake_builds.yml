@@ -104,7 +104,7 @@ jobs:
           ccache -z
       working-directory: ${{ github.workspace }}
     - name: ccache statistics
-      run: ccache -s -v -v
+      run: ccache -s -v
     - name: Build libjxl
       run: |
         # Build libjxl
@@ -123,7 +123,7 @@ jobs:
             && cd ../.. \
             && rm -rf libjxl
     - name: ccache statistics
-      run: ccache -s -v -v
+      run: ccache -s -v
 
     - name: Build libQB3
       run: |
@@ -138,7 +138,7 @@ jobs:
             && cd ../../.. \
             && rm -rf QB3
     - name: ccache statistics
-      run: ccache -s -v -v
+      run: ccache -s -vv
 
     - name: Build libbasisu
       run: |
