@@ -30,6 +30,9 @@ jobs:
     env:
       CMAKE_OPTIONS: -DPython_LOOKUP_VERSION=3.8 -DUSE_CCACHE=ON -DSWIG_REGENERATE_PYTHON=ON
       cache-name: cmake-ubuntu-focal
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+
     steps:
     - name: Checkout GDAL
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
