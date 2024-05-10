@@ -42,7 +42,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-${{ github.base_ref }}
             ${{ runner.os }}-${{ env.cache-name }}
-    - run: curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ccache/ccache/releases/download/v4.9.1/ccache-4.9.1-linux-x86_64.tar.xz | tar -xJ
+    - run: |
+        curl --proto '=https' --tlsv1.2 -LsSf https://github.com/ccache/ccache/releases/download/v4.9.1/ccache-4.9.1-linux-x86_64.tar.xz | tar -xJ
+        ls -la
     - name: ccache statistics
       run: ccache -s -v
     - name: Install dependency
