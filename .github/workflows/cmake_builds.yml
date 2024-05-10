@@ -103,6 +103,8 @@ jobs:
           echo CCACHE_MAXSIZE=250M >> ${GITHUB_ENV}
           ccache -z
       working-directory: ${{ github.workspace }}
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Build libjxl
       run: |
         # Build libjxl
@@ -120,6 +122,8 @@ jobs:
             && sudo make -j$(nproc) install \
             && cd ../.. \
             && rm -rf libjxl
+    - name: ccache statistics
+      run: ccache -s -v -v
 
     - name: Build libQB3
       run: |
@@ -133,6 +137,8 @@ jobs:
             && sudo make -j$(nproc) install \
             && cd ../../.. \
             && rm -rf QB3
+    - name: ccache statistics
+      run: ccache -s -v -v
 
     - name: Build libbasisu
       run: |
@@ -145,7 +151,8 @@ jobs:
             && sudo make -j$(nproc) install \
             && cd ../..\
             && rm -rf basis_universal
-
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Install pdfium
       run: |
         wget -q https://github.com/rouault/pdfium_build_gdal_3_9/releases/download/pdfium_6309_v1/install-ubuntu2004-rev6309.tar.gz \
@@ -166,11 +173,15 @@ jobs:
         mkdir build
         cd build
         cmake  ${CMAKE_OPTIONS} -Werror=dev -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/install-gdal -DCMAKE_UNITY_BUILD=${CMAKE_UNITY_BUILD} -DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror -DGDAL_USE_PUBLICDECOMPWT:BOOL=ON -DPUBLICDECOMPWT_URL=https://github.com/rouault/PublicDecompWT .. -DWERROR_DEV_FLAG="-Werror=dev"
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Build
       run: |
         cmake --build $GITHUB_WORKSPACE/superbuild/build -- -j$(nproc)
       env:
         GIT_LFS_SKIP_SMUDGE: 1 # for PublicDecompWT github repository clone
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Build fake ossfuzz fuzzers
       run: |
         cd $GITHUB_WORKSPACE/superbuild/build
@@ -178,6 +189,8 @@ jobs:
         ar r libFuzzingEngine.a fuzzingengine.o
         CXX=g++ CXXFLAGS="${CXXFLAGS} -I$PWD/gdal/port -I$PWD/gdal/gcore -L$PWD" LIBGDAL="-L$PWD/gdal -lgdal" SRC=/tmp OUT=/tmp $GITHUB_WORKSPACE/fuzzers/build_google_oss_fuzzers.sh
         OUT=/tmp $GITHUB_WORKSPACE/fuzzers/build_seed_corpus.sh
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: test autotest/cpp/gdallimits
       run: |
         sudo apt-get install -y numactl
@@ -190,18 +203,26 @@ jobs:
         cat out.txt
         grep "CPLGetNumCPUs = 1" out.txt >/dev/null
         grep "CPLGetUsablePhysicalRAM = 97 MB" out.txt >/dev/null
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: test (with command targets)
       run: |
         cmake --build $GITHUB_WORKSPACE/superbuild/build --target quicktest -- -j$(nproc)
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: test (with ctest)
       run: |
         cd $GITHUB_WORKSPACE/superbuild/build
         ctest -V
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: install and uninstall
       run: |
         cmake --build $GITHUB_WORKSPACE/superbuild/build --target install -- -j$(nproc)
         cmake --build $GITHUB_WORKSPACE/superbuild/build --target uninstall
         find $GITHUB_WORKSPACE/install-gdal || /bin/true
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: install
       run: |
         export PATH=$CMAKE_DIR:/usr/local/bin:/usr/bin:/bin # Avoid CMake config from brew etc.
@@ -215,6 +236,8 @@ jobs:
         $GITHUB_WORKSPACE/install-gdal/bin/gdalinfo --version
         PYTHONPATH=$GITHUB_WORKSPACE/install-gdal/lib/python3/dist-packages python3 -c "from osgeo import gdal;print(gdal.VersionInfo(None))"
         PYTHONPATH=$GITHUB_WORKSPACE/install-gdal/lib/python3/dist-packages python3 $GITHUB_WORKSPACE/scripts/check_doc.py
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: CMake with rpath
       run: |
         export PATH=$CMAKE_DIR:/usr/local/bin:/usr/bin:/bin # Avoid CMake config from brew etc.
@@ -222,6 +245,8 @@ jobs:
         cmake --build $GITHUB_WORKSPACE/superbuild/build --target install -- -j$(nproc)
         # For some reason, during the install phase of above invocation, the Python bindings are rebuilt after the build phase, and without the rpath... Can't reproduce that locally
         # PYTHONPATH=$GITHUB_WORKSPACE/install-gdal-with-rpath/lib/python3/dist-packages python -c "from osgeo import gdal;print(gdal.VersionInfo(None))"
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Rerun using Mono
       run: |
         export PATH=$CMAKE_DIR:/usr/local/bin:/usr/bin:/bin # Avoid CMake config from brew etc.
@@ -231,6 +256,8 @@ jobs:
         cmake --build $GITHUB_WORKSPACE/superbuild/build --target install -- -j$(nproc)
         # Below fails with errors like 'System.InvalidProgramException: Invalid IL code in CreateData:Main (string[]): IL_00c4: callvirt  0x0a00000c'
         # ctest -V -R "^csharp.*"
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Standalone Python bindings build from source
       run: |
         (cd $GITHUB_WORKSPACE/superbuild/build/gdal/swig/python && python setup.py sdist)
@@ -247,6 +274,8 @@ jobs:
         LD_LIBRARY_PATH=$GITHUB_WORKSPACE/install-gdal/lib gdal_edit byte.tif -mo FOO=BAR
         rm -f myvenv/bin/gdal_edit
         rm -f myvenv/bin/gdal_edit.py
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Standalone gdal-utils package from wheel
       run: |
         mv gdal-swig-python $GITHUB_WORKSPACE/superbuild/build/gdal/swig/python
@@ -261,6 +290,8 @@ jobs:
         cp $GITHUB_WORKSPACE/autotest/gcore/data/byte.tif .
         LD_LIBRARY_PATH=$GITHUB_WORKSPACE/install-gdal/lib gdal_edit byte.tif -mo FOO=BAR
         pip uninstall -y gdal-utils
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Test post-install usage (with pkg-config)
       run: |
         ./autotest/postinstall/test_pkg-config.sh $GITHUB_WORKSPACE/install-gdal
@@ -270,6 +301,8 @@ jobs:
     - name: Test post-install usage (with CMake)
       run: |
         ./autotest/postinstall/test_cmake.sh $GITHUB_WORKSPACE/install-gdal
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Rerun with static linkage
       run: |
         export PATH=$CMAKE_DIR:/usr/local/bin:/usr/bin:/bin # Avoid CMake config from brew etc.
@@ -283,6 +316,8 @@ jobs:
           -DGDAL_USE_HDF5=OFF \
           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/install-gdal-static
         cmake --build $GITHUB_WORKSPACE/superbuild/build --target install -- -j$(nproc)
+    - name: ccache statistics
+      run: ccache -s -v -v
     - name: Test post-install usage (static, with pkg-config)
       run: |
         ./autotest/postinstall/test_pkg-config.sh $GITHUB_WORKSPACE/install-gdal-static --static
@@ -293,7 +328,7 @@ jobs:
       run: |
         ./autotest/postinstall/test_cmake.sh $GITHUB_WORKSPACE/install-gdal-static --static
     - name: ccache statistics
-      run: ccache -s
+      run: ccache -s -v -v
 
   build-windows-msys2-mingw:
     runs-on: windows-2022
