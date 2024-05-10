@@ -103,6 +103,7 @@ jobs:
           echo CCACHE_MAXSIZE=250M >> ${GITHUB_ENV}
           ccache -z
       working-directory: ${{ github.workspace }}
+    - run: ccache --version
     - name: ccache statistics
       run: ccache -s -v
     - name: Build libjxl
