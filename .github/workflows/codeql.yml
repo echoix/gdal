@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'c-cpp' ]
+        language: [ 'c-cpp', 'actions' ]
         # CodeQL supports [ 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift' ]
         # Use only 'java-kotlin' to analyze code written in Java, Kotlin or both
         # Use only 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
@@ -49,6 +49,7 @@ jobs:
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
     - name: Install dependencies
+      if: ${{ matrix.language == 'c-cpp' }}
       run: |
           sudo apt-get update
           sudo apt-get install -y g++ swig python3-numpy libproj-dev libqhull-dev
@@ -93,10 +94,11 @@ jobs:
             unixodbc-dev
 
     - name: Install latest ninja
+      if: ${{ matrix.language == 'c-cpp' }}
       run: PYTHON_CMD=python3 && $PYTHON_CMD -m pip install ninja
 
     - name: Configure
-      if: matrix.language == 'c-cpp'
+      if: ${{ matrix.language == 'c-cpp' }}
       run: |
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
@@ -123,7 +125,7 @@ jobs:
                 id: cpp/non-https-url
 
     - name: Build
-      if: matrix.language == 'c-cpp'
+      if: ${{ matrix.language == 'c-cpp' }}
       run: |
         cmake --build build -j$(nproc)
 
